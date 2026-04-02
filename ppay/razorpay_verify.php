@@ -42,7 +42,8 @@ if ($success === true) {
         'order_id' => $razorpay_order_id,
         'payment_id' => $razorpay_payment_id,
         'signature' => $razorpay_signature,
-        'status' => 'success'
+        'status' => 'success',
+        'plan_type' => 'CASEOS'
     ]);
 
     // Find User From Demand ID / Order
@@ -79,7 +80,8 @@ if ($success === true) {
                 'amount' => $amount,
                 'currency' => RZP_CURRENCY,
                 'notes' => json_encode($_POST),
-                'status' => 'success'
+                'status' => 'success',
+                'plan_type' => 'CASEOS'
             ]);
 
             // 4. Use Core Function to update Wallet balance and history

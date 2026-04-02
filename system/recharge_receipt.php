@@ -99,7 +99,7 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
                 <div class="brand">
                     <h1>CaseOS | Case Operating System</h1>
                     <p style="color: #27ae60; font-weight: bold;"><?= $full_name ?></p>
-                    <p style="font-size: 12px; max-width: 250px;">OfferPlant, Near Kankarbagh Thana, Patna, Bihar - 800020</p>
+                    <p style="font-size: 12px; max-width: 250px;">2nd Floor Godrej Building, Salempur Chapra Bihar 841301 INDIA</p>
                 </div>
                 <div class="receipt-label">
                     <h2>PAYMENT RECEIPT</h2>
@@ -162,6 +162,14 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
             </div>
 
             <div class="footer">
+                <div style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: left;">
+                    <h4 style="margin-top: 0; color: var(--primary); font-size: 14px;">Contact Us</h4>
+                    <p style="font-size: 13px; color: #333; margin-bottom: 5px;"><strong>Jaldi se contact karein!</strong></p>
+                    <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">
+                        Do you need more information about our services or have any queries? <br>
+                        Then get in touch with us quickly!
+                    </p>
+                </div>
                 <p>Thank you for using Case Operating System.</p>
                 <p class="initiative">An initiative of OfferPlant Technologies Private Limited.</p>
                 <p style="font-size: 10px; margin-top: 20px;">This is a system-generated document and does not require a physical signature.</p>
