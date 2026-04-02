@@ -98,7 +98,6 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
             <div class="header">
                 <div class="brand">
                     <h1>CaseOS | Case Operating System</h1>
-                    <p style="color: #27ae60; font-weight: bold;"><?= $full_name ?></p>
                     <p style="font-size: 12px; max-width: 250px;">2nd Floor Godrej Building, Salempur Chapra Bihar 841301 INDIA</p>
                 </div>
                 <div class="receipt-label">
