@@ -1,0 +1,10 @@
+/vendor/
+/razorpay-php/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.code-workspace
+/upload/
+# Add other paths you don't want on GitHub below
