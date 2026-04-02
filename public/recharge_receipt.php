@@ -1,6 +1,6 @@
 <?php
 require_once('../function.php');
-session_start();
+// session_start() removed as it is already started in op_config.php
 
 if (!isset($_SESSION['initiated'])) {
     die("Access Denied");
@@ -31,7 +31,7 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction Receipt - <?= $inst_name ?></title>
+    <title>Receipt - CaseOS | Case Operating System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -70,7 +70,8 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
         .summary-row.total h3 { margin: 0; font-size: 24px; color: var(--success); }
         
         .footer { margin-top: 60px; text-align: center; border-top: 1px solid #f0f0f0; padding-top: 30px; }
-        .footer p { margin: 0; font-size: 12px; color: #bdc3c7; }
+        .footer p { margin: 0; font-size: 13px; color: #7f8c8d; }
+        .footer .initiative { color: #2c3e50; font-weight: 600; margin-top: 5px; }
         
         .action-bar { margin-bottom: 30px; display: flex; justify-content: center; gap: 15px; }
         .btn { padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.3s; display: inline-flex; align-items: center; }
@@ -96,9 +97,9 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
         <div class="receipt-card">
             <div class="header">
                 <div class="brand">
-                    <h1><?= $inst_name ?></h1>
-                    <p>Advocate Case Operating System</p>
+                    <h1>CaseOS | Case Operating System</h1>
                     <p style="color: #27ae60; font-weight: bold;"><?= $full_name ?></p>
+                    <p style="font-size: 12px; max-width: 250px;">OfferPlant, Near Kankarbagh Thana, Patna, Bihar - 800020</p>
                 </div>
                 <div class="receipt-label">
                     <h2>PAYMENT RECEIPT</h2>
@@ -151,7 +152,7 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
                     <span>₹<?= number_format($txn['amount'], 2) ?></span>
                 </div>
                 <div class="summary-row">
-                    <span>GST (0%)</span>
+                    <span>Tax (%)</span>
                     <span>₹0.00</span>
                 </div>
                 <div class="summary-row total">
@@ -161,9 +162,9 @@ $date = date('d F, Y h:i A', strtotime($txn['transaction_date']));
             </div>
 
             <div class="footer">
-                <p>Thank you for using Advocate Case Operating System (CaseOS).</p>
-                <p>&copy; <?= date('Y') ?> <?= $inst_name ?> | Legal Billing Department</p>
-                <p style="font-size: 10px; margin-top: 10px;">This is a system-generated document and does not require a physical signature.</p>
+                <p>Thank you for using Case Operating System.</p>
+                <p class="initiative">An initiative of OfferPlant Technologies Private Limited.</p>
+                <p style="font-size: 10px; margin-top: 20px;">This is a system-generated document and does not require a physical signature.</p>
             </div>
         </div>
     </div>
