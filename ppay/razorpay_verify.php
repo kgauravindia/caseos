@@ -34,11 +34,14 @@ if ($success === true) {
     $demand_id = $_SESSION['demand_id'];
     $amount = $_SESSION['recharge_amount'];
     
-    // Log the success raw data
+    // Log the success data to payment_logs
     insert_data('payment_logs', [
         'advocate_id' => $_SESSION['user_id'],
-        'log_data' => json_encode($_POST),
-        'status' => 'SUCCESS'
+        'amount' => $amount,
+        'order_id' => $razorpay_order_id,
+        'payment_id' => $razorpay_payment_id,
+        'signature' => $razorpay_signature,
+        'status' => 'success'
     ]);
 
     // Find User From Demand ID / Order
@@ -74,6 +77,7 @@ if ($success === true) {
                 'payment_id' => $razorpay_payment_id,
                 'amount' => $amount,
                 'currency' => RZP_CURRENCY,
+                'notes' => json_encode($_POST),
                 'status' => 'success'
             ]);
 
