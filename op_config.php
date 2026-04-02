@@ -56,6 +56,11 @@ if ($host == 'localhost' || $host == '127.0.0.1') {
 
 /*-------End of Basic Details ---------*/
 
+/* Razorpay Settings */
+define('RAZORPAY_KEY_ID', 'rzp_live_RUcX3vW4ZEbY47');
+define('RAZORPAY_KEY_SECRET', 'HaH57gsIQcvVGK8PLmkdF61o');
+define('RZP_CURRENCY', 'INR');
+
 extract($CONFIG);
 
 ?>
