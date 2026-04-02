@@ -1,5 +1,5 @@
 <?php
-require_once("../system/all_header.php");
+require_once("all_header.php");
 $table_name = "payment_transactions";
 $user_id = $_SESSION['user_id'];
 
@@ -36,7 +36,7 @@ $res = get_all($table_name, '*', ['op_user_id' => $user_id, 'status' => 'success
                                                 <td><strong>₹<?= number_format($txn['amount'], 2) ?></strong></td>
                                                 <td><?= $txn['payment_method'] ?: 'Online' ?></td>
                                                 <td>
-                                                    <a href="<?= $base_url ?>public/recharge_receipt?payment_id=<?= $txn['payment_id'] ?>" 
+                                                                                                        <a href="<?= $base_url ?>system/recharge_receipt?payment_id=<?= $txn['payment_id'] ?>" 
                                                        class="btn btn-sm btn-outline-primary" target="_blank">
                                                        View Receipt
                                                     </a>
@@ -57,4 +57,4 @@ $res = get_all($table_name, '*', ['op_user_id' => $user_id, 'status' => 'success
         </div>
     </div>
 </main>
-<?php require_once("../system/footer.php"); ?>
+<?php require_once("footer.php"); ?>
