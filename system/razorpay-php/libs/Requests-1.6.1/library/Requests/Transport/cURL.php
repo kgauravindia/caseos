@@ -229,7 +229,7 @@ class Requests_Transport_cURL implements Requests_Transport {
 			$url = self::format_get($url, $data);
 		}
 		elseif (!empty($data) && !is_string($data)) {
-			$data = http_build_query($data, null, '&');
+			$data = http_build_query($data, '', '&');
 		}
 
 		switch ($options['type']) {
@@ -256,6 +256,10 @@ class Requests_Transport_cURL implements Requests_Transport {
 		curl_setopt($this->fp, CURLOPT_REFERER, $url);
 		curl_setopt($this->fp, CURLOPT_USERAGENT, $options['useragent']);
 		curl_setopt($this->fp, CURLOPT_HTTPHEADER, $headers);
+		
+		// Fix SSL Error for legacy SDK on modern PHP
+		curl_setopt($this->fp, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($this->fp, CURLOPT_SSL_VERIFYHOST, false);
 
 		if (true === $options['blocking']) {
 			curl_setopt($this->fp, CURLOPT_HEADERFUNCTION, array(&$this, 'stream_headers'));

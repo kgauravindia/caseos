@@ -10,26 +10,31 @@ class Resource implements ArrayAccess, IteratorAggregate
 {
     protected $attributes = array();
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->attributes);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return (isset($this->attributes[$offset]));
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->attributes[$offset] = $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->attributes[$offset];
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->attributes[$offset]);

@@ -14,6 +14,13 @@
  */
 class Requests_Hooks implements Requests_Hooker {
 	/**
+	 * Map of hooks to their callbacks
+	 *
+	 * @var array
+	 */
+	public $hooks = array();
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
