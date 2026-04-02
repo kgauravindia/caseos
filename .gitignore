@@ -1,5 +1,7 @@
 /vendor/
+/system/vendor/
 /razorpay-php/
+/system/razorpay-php/
 *.log
 .DS_Store
 Thumbs.db
