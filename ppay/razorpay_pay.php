@@ -26,7 +26,7 @@ if (isset($_POST['amount']) && $_POST['amount'] > 0) {
 
     // Insert into payment_orders table
     insert_data('payment_orders', [
-        'advocate_id' => $_SESSION['user_id'],
+        'op_user_id' => $_SESSION['user_id'],
         'order_id' => $razorpayOrderId,
         'amount' => $_POST['amount'],
         'currency' => RZP_CURRENCY,

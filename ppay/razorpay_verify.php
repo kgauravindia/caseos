@@ -36,7 +36,7 @@ if ($success === true) {
     
     // Log the success data to payment_logs
     insert_data('payment_logs', [
-        'advocate_id' => $_SESSION['user_id'],
+        'op_user_id' => $_SESSION['user_id'],
         'amount' => $amount,
         'order_id' => $razorpay_order_id,
         'payment_id' => $razorpay_payment_id,
@@ -72,7 +72,7 @@ if ($success === true) {
 
             // 3. Insert into new payment_transactions table
             insert_data('payment_transactions', [
-                'advocate_id' => $user_id,
+                'op_user_id' => $user_id,
                 'order_id' => $razorpay_order_id,
                 'payment_id' => $razorpay_payment_id,
                 'amount' => $amount,
