@@ -533,9 +533,19 @@ function insert_data($table_name, $ArrayData)
 	global $user_id;
 	global $current_date_time;
 	
-	// Add user_id and created_at to the data array
-	$ArrayData['created_by'] = $user_id;
-	$ArrayData['created_at'] = $current_date_time;
+    // Check table columns to see if metadata fields exist
+    $cols = column_list($table_name)['data'];
+    $actual_cols = array_column($cols, 'COLUMN_NAME');
+
+	// Add created_by only if column exists
+    if(in_array('created_by', $actual_cols)) {
+	    $ArrayData['created_by'] = $user_id;
+    }
+    
+    // Add created_at only if column exists
+    if(in_array('created_at', $actual_cols)) {
+	    $ArrayData['created_at'] = $current_date_time;
+    }
 
 	// Extract column names and values from the array
 	$columns = implode(", ", array_keys($ArrayData));
@@ -546,9 +556,15 @@ function insert_data($table_name, $ArrayData)
 	// Prepare the values part of the SQL query
 	$values_str = implode(", ", $values);
 
-	// Prepare the SQL query with ON DUPLICATE KEY UPDATE
-	$sql = "INSERT INTO $table_name ($columns) VALUES ($values_str) 
-	        ON DUPLICATE KEY UPDATE created_by = VALUES(created_by), created_at = VALUES(created_at)";
+    // Build ON DUPLICATE KEY UPDATE dynamically based on columns
+    $update_parts = [];
+    if(in_array('created_by', $actual_cols)) $update_parts[] = "created_by = VALUES(created_by)";
+    if(in_array('created_at', $actual_cols)) $update_parts[] = "created_at = VALUES(created_at)";
+    
+    $update_str = !empty($update_parts) ? " ON DUPLICATE KEY UPDATE " . implode(", ", $update_parts) : "";
+
+	// Prepare the SQL query
+	$sql = "INSERT INTO $table_name ($columns) VALUES ($values_str) $update_str";
 
 	// Execute the query
 	$res = mysqli_query($con, $sql);
