@@ -114,6 +114,8 @@ if ($success === true) {
             <h1>Success</h1>
             <p>Your wallet has been recharged with ₹<?= $amount ?>.</p>
             <p>Payment ID: <?= $razorpay_payment_id ?></p>
+            <br>
+            <a href="<?= $base_url ?>public/recharge_receipt?payment_id=<?= $razorpay_payment_id ?>" class="btn" style="background: #2ecc71;">View Receipt</a>
         <?php else: ?>
             <div style="border-radius:200px; height:200px; width:200px; background: #FDEDEC; margin:0 auto;">
                 <i style="color: #E74C3C; font-size: 100px; line-height: 200px;">✗</i>
