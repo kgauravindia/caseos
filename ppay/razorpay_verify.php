@@ -36,7 +36,7 @@ if ($success === true) {
     
     // Log the success raw data
     insert_data('payment_logs', [
-        'user_id' => $_SESSION['user_id'],
+        'advocate_id' => $_SESSION['user_id'],
         'log_data' => json_encode($_POST),
         'status' => 'SUCCESS'
     ]);
@@ -69,7 +69,7 @@ if ($success === true) {
 
             // 3. Insert into new payment_transactions table
             insert_data('payment_transactions', [
-                'user_id' => $user_id,
+                'advocate_id' => $user_id,
                 'order_id' => $razorpay_order_id,
                 'payment_id' => $razorpay_payment_id,
                 'amount' => $amount,
