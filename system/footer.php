@@ -1,70 +1,54 @@
-<footer class="footer">
+			<footer class="footer bg-white mt-auto py-4">
 				<div class="container-fluid">
-					<div class="row text-muted">
+					<div class="row text-muted align-items-center">
 						<div class="col-6 text-start">
-							<p class="mb-0">
-							&copy; <?= date('Y'); ?> <?= $inst_name; ?>   
+							<p class="mb-0 small fw-medium">
+							&copy; <?= date('Y'); ?> <span class="text-primary"><?= $inst_name; ?></span>. All rights reserved.
 							</p>
 						</div>
 						<div class="col-6 text-end">
-							<ul class="list-inline">
-								<li class="list-inline-item">
-								   	<?php
-                            if(isset($_SESSION['admin_data']) && $_SESSION['admin_data']['user_outh'] =='yes'){
-                             $sdata = $_SESSION['admin_data'];
-                             $data = get_data('op_user',$sdata['user_id'])['data'];
-                             ?>
-                            
-                            <span data-url='show_user' data-id='<?= $data['user_name'] ?>' data-code='<?= $data['user_pass'] ?>' class='login_as badge bg-danger' >
-                                <i class='fa fa-arrow-left'></i> Back To Admin</span> |
-                           
-                        <?php } ?> 
-								    
-									Planted By <a href="<?= @$dev_url; ?>" target="_blank" class="text-muted"><strong><?= $dev_by ?></strong></a>
-								</li>
-								
-							
-							</ul>
+							<p class="mb-0 small">
+							    <span class="d-none d-md-inline-block">Built with passion by</span> 
+							    <a href="<?= @$dev_url; ?>" target="_blank" class="text-dark fw-bold" style="text-decoration: none;">
+							        <i data-feather="heart" class="text-danger feather-sm me-1" style="width:12px; height:12px; fill: currentColor;"></i> <?= $dev_by ?>
+							    </a>
+							</p>
 						</div>
 					</div>
 				</div>
 			</footer>
 		</div>
 	</div>
-
 	<!-- =========== View Data IN modal ========= -->
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id='view_data'>
+<div class="modal fade bd-example-modal-lg shadow-premium" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id='view_data'>
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalCenterTitle"></h3>
+    <div class="modal-content border-0 rounded-4">
+      <div class="modal-header border-bottom-0 p-4">
+        <h3 class="modal-title fw-bold" id="exampleModalCenterTitle"></h3>
       	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body px-0">
+      <div class="modal-body px-4 pb-4">
       </div>
     </div>
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-	<div class="offcanvas-header">
-		<h4 id="offcanvasRightLabel">Show/Hide Columns 
+<div class="offcanvas offcanvas-end border-0 shadow-lg" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 350px;">
+	<div class="offcanvas-header p-4">
+		<h4 id="offcanvasRightLabel" class="fw-bold mb-0">Table Columns</h4>
 		<?php if($user_type=='DEV' or $user_type=='ADMIN'){ ?>
-		<a href="<?= $base_url?>system/op_column_sorting?table_name=<?= $table_name?>" title="Sort Columns" class="btn btn-primary btn-sm"><i class="fa fa-arrows-alt"></i></a>
+		<a href="<?= $base_url?>system/op_column_sorting?table_name=<?= $table_name?>" title="Sort Columns" class="btn btn-primary btn-sm rounded-circle p-2 mx-2"><i data-feather="move"></i></a>
 		<?php } ?>
-		</h4>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
-	<div class="offcanvas-body">
-	
-		<div class="card-body">
-			<table>
+	<div class="offcanvas-body p-4">
+		<div class="table-responsive">
+			<table class="table table-sm align-middle">
 			<?php 
-			
             $col_list =  get_all('op_master_table','*',array('table_name'=>$table_name,'status'=>'ACTIVE','is_edit'=>'YES'))['data'];
             foreach($col_list as $col)
             {
-              echo "<tr><td>". add_space($col['column_name']) ." </td><td>". $switch_str= show_switch('op_master_table',  $col['id'], 'show_in_table', $col['show_in_table'] ) ."</td></tr>";
+              echo "<tr><td class='fw-medium'>". add_space($col['column_name']) ." </td><td class='text-end'>". $switch_str= show_switch('op_master_table',  $col['id'], 'show_in_table', $col['show_in_table'] ) ."</td></tr>";
             }
             ?>
 			</table>	
@@ -75,8 +59,7 @@
 <script src="<?= $base_url ?>system/js/app.js"></script>
 <script src="<?= $base_url ?>system/js/datatables.js"></script>
 
-<!-- This is data table -->
-<!-- start - This is for export functionality only -->
+<!-- Export functionality -->
 <script src="<?= $base_url ?>system/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.min.js"></script>
 <script src="<?= $base_url ?>system/DataTables-1.10.15/extensions/Buttons/js/buttons.flash.min.js"></script>
 <script src="<?= $base_url ?>system/DataTables-1.10.15/ex-js/jszip.min.js"></script>
@@ -84,24 +67,23 @@
 <script src="<?= $base_url ?>system/DataTables-1.10.15/ex-js/vfs_fonts.js"></script>
 <script src="<?= $base_url ?>system/DataTables-1.10.15/extensions/Buttons/js/buttons.html5.min.js"></script>
 <script src="<?= $base_url ?>system/DataTables-1.10.15/extensions/Buttons/js/buttons.print.min.js"></script>
-<!-- end - This is for export functionality only-->
 
 <script src="<?= $base_url ?>system/js/validate.js"></script>
 <script src="<?= $base_url ?>system/js/shortcut.js"></script>
 <script src="<?= $base_url ?>system/js/bootbox.all.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-base64@2.5.2/base64.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/lang/summernote-ko-KR.min.js"></script>
 <script src="<?= $base_url ?>system/js/op.js"></script>
-
 
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
+		feather.replace();
 		
 		$('.data-tbl').dataTable({
+
 			responsive: true,
 			fixedHeader: true,
 			aLengthMenu: [

@@ -15,24 +15,26 @@
 					</svg>
 				</a>
 
-				<div class="sidebar-user">
-					<div class="d-flex justify-content-center">
-						<div class="flex-shrink-0 bg-light p-1">
-						 <img src='<?= $user_photo ?>' width='40px' height='40px' class="avatar img-fluid rounded">
+				<div class="sidebar-user p-4 mb-3 mx-3 rounded-4 bg-dark-subtle" style="background: rgba(255,255,255,0.03);">
+					<div class="d-flex align-items-center">
+						<div class="flex-shrink-0">
+						    <div class="avatar-wrapper p-1 rounded-circle border border-primary border-opacity-25">
+    						    <img src='<?= $user_photo ?>' width='48' height='48' class="avatar img-fluid rounded-circle shadow-sm">
+						    </div>
 						</div>
-						<div class="flex-grow-1 ps-2">
-							<a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
+						<div class="flex-grow-1 ms-3 overflow-hidden">
+							<a class="sidebar-user-title dropdown-toggle d-block text-truncate fw-bold text-white mb-0" href="#" data-bs-toggle="dropdown" style="font-size: 0.9rem;">
 								<?= @$_SESSION['user_name']; ?>
 							</a>
-							<div class="dropdown-menu dropdown-menu-start">
-								<!-- <a class="dropdown-item" href="#pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> Profile</a> -->
-								<a class="dropdown-item" href="<?= $base_url?>system/op_change_password"><i class="align-middle me-1" data-feather="settings"></i> Change Password</a>
-								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
+							<div class="dropdown-menu dropdown-menu-start shadow-premium border-0">
+								<a class="dropdown-item py-2" href="<?= $base_url?>system/op_change_password"><i class="align-middle me-2 feather-sm" data-feather="settings"></i> Change Password</a>
+								<a class="dropdown-item py-2" href="#"><i class="align-middle me-2 feather-sm" data-feather="help-circle"></i> Help Center</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#" onclick='logout()'>Log out</a>
+								<a class="dropdown-item py-2 text-danger" href="#" onclick='logout()'><i class="align-middle me-2 feather-sm" data-feather="log-out"></i> Log out</a>
 							</div>
-							<br>
-							<div id='userinfo' class="sidebar-user-subtitle badge text-warning" data-user_type='<?= @$_SESSION['user_type']; ?>' data-user_name='<?= @$_SESSION['user_name']; ?>' data-device-type=''> <?= @$_SESSION['user_type']; ?></div>
+							<div class="sidebar-user-subtitle d-flex align-items-center mt-1">
+							    <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 rounded-pill" style="font-size: 0.65rem; border: 1px solid rgba(99, 102, 241, 0.2);"><?= @$_SESSION['user_type']; ?></span>
+							</div>
 						</div>
 					</div>
 				</div>

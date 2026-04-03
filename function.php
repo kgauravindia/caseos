@@ -511,47 +511,41 @@ function btn_case_view($table, $id, $user_id='')
 
 function custom_widget($table_name, $status = 'ACTIVE')
 {
-    //global $user_type;
-    $user_id =$_SESSION['user_id'];
-    $user_type =$_SESSION['user_type'];
-    $ct =0;
-    global $branch_id;
-    $table_id = get_data('op_table',$table_name,'id','table_id')['data'];
+    $user_id = $_SESSION['user_id'];
+    $user_type = $_SESSION['user_type'];
+    $ct = 0;
     
-    if($user_type=='DEV' or $user_type=='SUPERADMIN' )
-    {
-	    $ct =  get_all($table_name, '*', array('status' => $status))['count'];
+    $table_data = get_data('op_table', $table_name, null, 'table_id');
+    $table_id = isset($table_data['data']['id']) ? $table_data['data']['id'] : 0;
+    
+    if($user_type=='DEV' || $user_type=='SUPERADMIN') {
+	    $ct = get_all($table_name, '*', array('status' => $status))['count'];
+    } else {
+	    $ct = get_all($table_name, '*', array('status' => $status, 'user_id' => $user_id))['count'];
     }
-    else if( $user_type=='ADMIN' or $user_type=='ADVOCATE' or $user_type=='ADVOCATE CLERK')
-    {
-         //echo $user_id  = get_data('ref_reg', $_SESSION['user_name'],'id','mobile')['data'];
-	     $ct = get_all($table_name, '*', array('status' => $status,'user_id'=>$user_id))['count'];
-    }
+
 	$iconres = get_multi_data('op_menu', array('type' => 'MAIN', 'table_id' => $table_id));
-	if ($iconres['count'] > 0) {
-		$icon = $iconres['data'][0]['icon'];
-	} else {
-		$icon = 'table';
-	}
+	$icon = ($iconres['count'] > 0) ? $iconres['data'][0]['icon'] : 'database';
+    
+    // Choose a color based on the icon/table name or just use primary
+    $colors = ['primary', 'success', 'info', 'warning', 'danger'];
+    $color = $colors[abs(crc32($table_name)) % count($colors)];
 
-	$str = '<div class="col-sm-6 col-xl-3">
-		<div class="card">
-			<div class="card-body">
-				<div class="row">
-					<div class="col mt-0">
-						<h5 class="card-title">' . add_space($table_name) . '</h5>
+	$str = '<div class="col-sm-6 col-xl-3 mb-4">
+		<div class="card shadow-premium h-100 border-0">
+			<div class="card-body p-4">
+				<div class="d-flex align-items-center mb-3">
+					<div class="stat me-3" style="background: var(--' . $color . '-soft) !important; color: var(--' . $color . ') !important; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+						<i data-feather="' . $icon . '" class="feather-lg"></i>
 					</div>
-
-					<div class="col-auto">
-						<div class="stat text-warning">
-							<i class="fa fa-' . $icon . '"></i>
-						</div>
+					<div>
+						<h6 class="card-title mb-0" style="font-size: 0.75rem; letter-spacing: 0.05em; font-weight: 700;">' . strtoupper(add_space($table_name)) . '</h6>
+						<span class="text-muted small">' . $status . '</span>
 					</div>
 				</div>
-				<h1 class="mt-1 mb-3">' . $ct . '</h1>
-				<div class="mb-0">
-					<a href="../public/' . $table_name . '_manage.php" class="badge badge-warning-light"> <i class="mdi mdi-arrow-bottom-right"></i>' . $ct. '</a>
-					<span class="text-muted">' . $status . '</span>
+				<div class="d-flex align-items-baseline justify-content-between">
+					<h2 class="mb-0 fw-bold" style="font-family: \'Outfit\', sans-serif;">' . $ct . '</h2>
+					<a href="../public/' . $table_name . '_manage.php" class="btn btn-sm btn-light rounded-pill px-3" style="font-size: 0.7rem;">View All <i data-feather="chevron-right" style="width:12px; height:12px;"></i></a>
 				</div>
 			</div>
 		</div>
@@ -559,6 +553,7 @@ function custom_widget($table_name, $status = 'ACTIVE')
 
 	return $str;
 }
+
 
 function recent_widget_1($table_name)
 	{

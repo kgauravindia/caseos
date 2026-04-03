@@ -997,7 +997,7 @@ function upload_img($file_name, $imgkey = 'rand', $target_dir = "upload", $size 
 	$res['id'] = 0;
 	$res['status'] = 'error';
 	$res['msg'] = '';
-	$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+	$imageFileType = strtolower(pathinfo((string)$target_file, PATHINFO_EXTENSION));
 	// Check if image file is a actual image or fake image
 
 
@@ -1046,7 +1046,7 @@ function multi_upload($fileArr='uploadimg',$target_dir = "../upload"){
 	  	$total = count($files['name']);
 	  	for($i=0; $i<$total; $i++){
 	  		$file_name = $files['name'][$i];
-	  		$extention = pathinfo($file_name, PATHINFO_EXTENSION);
+	  		$extention = pathinfo((string)$file_name, PATHINFO_EXTENSION);
 	  		$valid_extension = array("png","jpg","jpeg","pdf","zip","xls","doc","rar","xlsx","docx","pptx","ppt","gif","rtf","txt","csv","mp3","mp4","ogg","wav","amr","dat","vob");
 	  if(in_array($extention, $valid_extension)){
 	  	$new_name = rand(100,999).remove_only_space($file_name);
@@ -2197,7 +2197,7 @@ function show_img($img_name, $width='50', $height='50')
 	$remote_url = $base_url.'upload/' . $img_name;
 	$no_img_url = $base_url.'upload/no_photo.jpg';
 	$image_url = (remote_file_exists($remote_url) or $img_name =='')?$no_img_url:$remote_url;
-		$extention = pathinfo($img_name, PATHINFO_EXTENSION);
+		$extention = pathinfo((string)$img_name, PATHINFO_EXTENSION);
 
 	$str = "<img src='$image_url' width='$width' height='$height'>";
 	$finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -2482,7 +2482,7 @@ function create_form($table_name, $id, $isedit='yes', $action ='master_update_da
 						if ($isedit == 'yes') {
 						    $images = explode(',',$value);
 						    foreach($images as $img){
-						        	$ext = pathinfo($img, PATHINFO_EXTENSION);
+						        	$ext = pathinfo((string)$img, PATHINFO_EXTENSION);
                 		        if($ext =='pdf' || $ext=='docs'){
                 		             $str .=  "<a href='../upload/$img' download>Download PDF</a>";
                 		        }else{
@@ -2895,7 +2895,7 @@ function display_value($value,$input_type, $container ='data-table')
 		    $arr = explode(",", $value);
 		    foreach($arr as $img)
 		    {
-			$ext = pathinfo($img, PATHINFO_EXTENSION);
+			$ext = pathinfo((string)$img, PATHINFO_EXTENSION);
 		       
 		         $str .=  "<a href='{$base_url}upload/$img' download>Download </a>";
 		    }
@@ -2907,8 +2907,8 @@ function display_value($value,$input_type, $container ='data-table')
 			
 		case 'Link':
 		case 'Url':
-		    $path = ($value !='')?parse_url($value, PHP_URL_PATH):'';
-            $ext = ($path !='')?pathinfo($path, PATHINFO_EXTENSION):'';
+		    $path = ($value !='' && $value !== null)?parse_url((string)$value, PHP_URL_PATH):'';
+            $ext = ($path !='' && $path !== null)?pathinfo((string)$path, PATHINFO_EXTENSION):'';
             if($ext=='jpg' or $ext =='png' or $ext =='jpeg' or $ext =='gif' )
             {
                $str =($value=="")?"": "<a href='$value' download><img src='$value' width='100' height='60px' download /></a>"; 
