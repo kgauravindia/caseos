@@ -1,6 +1,5 @@
 <?php 
 require_once('function.php');
-session_start();
 if (!isset($_SESSION['initiated'])) {
   echo "<script> window.location ='{$base_url}system/op_login.php' </script>";   
 }
