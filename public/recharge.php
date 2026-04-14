@@ -79,6 +79,9 @@
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-2">Wallet Recharge</h1>
                     <p class="text-muted">Top up your wallet safely via Razorpay</p>
+                    <a href="recharge_receipts_list" class="btn btn-link btn-sm text-decoration-none">
+                        <i class="feather-sm me-1" data-feather="clock"></i> View Recharge History
+                    </a>
                 </div>
                 
                 <div class="card recharge-card">

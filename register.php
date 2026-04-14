@@ -96,7 +96,7 @@ $table_name = 'op_user';
         $user_pass = password_hash($_POST['user_pass'], PASSWORD_BCRYPT);
 
         // Validate and Insert
-        if (!empty($full_name) && !empty($user_name) && !empty($user_email) && !empty($password)) {
+        if (!empty($full_name) && !empty($user_name) && !empty($user_email) && !empty($_POST['user_pass'])) {
             $stmt = $conn->prepare("INSERT INTO op_user (full_name, user_name, user_email, user_mobile, user_pass) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $full_name, $user_name, $user_email, $user_mobile, $user_pass);
 

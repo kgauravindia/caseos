@@ -2,7 +2,10 @@
 ini_set('display_errors', 1);
 require_once(dirname(__DIR__) . '/op_config.php');
 // Define the root directory constant
-//use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 global $db_name;
 $con = mysqli_connect($host_name, $db_user, $db_password, $db_name)
 	or die("Unable to Connect, Check the Connection Parameter. " . mysqli_error($con));
@@ -1075,12 +1078,12 @@ function multi_upload($fileArr='uploadimg',$target_dir = "../upload"){
 
 function send_mail($to, $subject, $msg, $att_arr='', $name='')
 {
-   require 'vendor/autoload.php';
+   require __DIR__ . '/vendor/autoload.php';
    global $inst_name;
    global $inst_email;
    global $noreply_email;
    global $inst_email_password;
-   $mail = new PHPMailer;
+   $mail = new PHPMailer(true);
    $mail->isSMTP();
    $mail->SMTPDebug = 0;// 2 for debug
    $mail->Host = 'smtp.hostinger.com';
@@ -1096,7 +1099,9 @@ function send_mail($to, $subject, $msg, $att_arr='', $name='')
    $mail->Body = $msg;
        foreach((array)$att_arr as $att)
        {
-            $mail->addAttachment($att);
+            if(!empty($att)){
+                $mail->addAttachment($att);
+            }
        }
    if (!$mail->send()) {
        echo 'Mailer Error: ' . $mail->ErrorInfo;

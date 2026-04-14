@@ -85,19 +85,52 @@
                 </a>
             </li>
 
+            <!-- Wallet Balance -->
+            <li class="nav-item ms-2 d-none d-sm-inline-block">
+                <div class="bg-success-soft rounded-pill px-3 py-1 d-flex align-items-center border border-success border-opacity-10">
+                    <i class="text-success feather-sm me-2" data-feather="wallet" style="width:14px; height:14px;"></i>
+                    <span class="text-success fw-bold small">₹ <?= number_format($udata['wallet'], 2) ?></span>
+                </div>
+            </li>
+
             <li class="nav-item dropdown ms-2">
                 <a class="nav-link dropdown-toggle d-flex align-items-center bg-light rounded-pill px-2 py-1" href="#" data-bs-toggle="dropdown">
                    <img src='<?= $user_photo ?>' width='32' height='32' class="rounded-circle shadow-sm border border-white">
                    <span class="text-dark fw-semibold ms-2 d-none d-md-inline-block me-1" style="font-size: 0.85rem;"><?= @$_SESSION['user_name']; ?></span>
                 </a>
-                <div class="dropdown-menu dropdown-menu-end shadow-premium border-0 mt-2">
+                <div class="dropdown-menu dropdown-menu-end shadow-premium border-0 mt-2 animate-fade-in" style="min-width: 200px;">
+                    <div class="dropdown-header d-md-none">
+                        <div class="d-flex align-items-center px-1 py-1">
+                            <i class="feather-sm me-2 text-success" data-feather="wallet"></i>
+                            <span class="text-success fw-bold">₹ <?= number_format($udata['wallet'], 2) ?></span>
+                        </div>
+                    </div>
+                    
                     <a class="dropdown-item py-2" href="<?= $base_url?>system/op_user_add?link=<?= encode("id=".$_SESSION['user_id'])?>">
                         <i class="align-middle me-2 feather-sm" data-feather="user"></i> My Profile
                     </a>
-                    <a class="dropdown-item py-2" href="op_change_password">
-                        <i class="align-middle me-2 feather-sm" data-feather="settings"></i> Settings
-                    </a>
+                    
                     <div class="dropdown-divider"></div>
+                    
+                    <a class="dropdown-item py-2" href="<?= $base_url ?>public/recharge">
+                        <i class="align-middle me-2 feather-sm text-success" data-feather="plus-circle"></i> Recharge Wallet
+                    </a>
+                    <a class="dropdown-item py-2" href="<?= $base_url ?>public/recharge_receipts_list">
+                        <i class="align-middle me-2 feather-sm text-info" data-feather="file-text"></i> Recharge History
+                    </a>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <a class="dropdown-item py-2" href="<?= $base_url ?>system/op_change_password">
+                        <i class="align-middle me-2 feather-sm" data-feather="lock"></i> Change Password
+                    </a>
+                    
+                    <a class="dropdown-item py-2" href="#">
+                        <i class="align-middle me-2 feather-sm" data-feather="help-circle"></i> Support Center
+                    </a>
+                    
+                    <div class="dropdown-divider"></div>
+                    
                     <a class="dropdown-item py-2 text-danger" href="#" onclick="logout()">
                         <i class="align-middle me-2 feather-sm" data-feather="log-out"></i> Sign out
                     </a>

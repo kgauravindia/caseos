@@ -593,7 +593,22 @@ if (isset($_GET['task'])) {
 			    	$password = rnd_str(6);
 			insert_data('op_user',['full_name'=>$name, 'user_name'=>$mobile,'user_mobile'=>$mobile,'user_email'=>$email,'status'=>'ACTIVE','user_doc'=>$today,'user_type'=>$ref_type,'user_pass'=>$password]);
 			
-			send_mail();
+			 if($email!='')
+ 		    {
+			$msg_email = '<div class="container" style="max-width: 600px; margin: 50px auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <h4 style="color: #333;">Registration Successful</h4>
+                <p style="color: #555;">Dear  '.$name.' , Your are registered a reference person. Details sent on '.$mobile.' and email '.$email.'   </p>
+                <p style="color: #555555;"><strong>Username:</strong> <span style="color: #007bff;">'.$mobile.'</span></p>
+                <p style="color: #555555;"><strong>Password:</strong> <span style="color: #007bff;">'.$password.'</span></p>
+                <a class="reset-link" href="'.$base_url.'" style="display: inline-block; padding: 10px 20px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 5px;"> Login Here </a>
+                
+                <p style="color: #555;">This mail is auto generated mail from Advocates / Legal Professionals.</p>
+                <br>
+                Regards<br>
+                <b>'. $inst_name.'</b>
+                     </div>';
+			send_mail($email, "Reference Person Registration from $inst_name ", $msg_email);
+ 		    }
 			}
 			else{
 			    $fid  = $find['data']['id'];
