@@ -3510,8 +3510,13 @@ function get_filesize($filename) {
 //++++++++++++++++++++++++++++++++++++++++++++++++//
 
 $a = all_config();
-extract($a);
-extract(get_data('op_settings',1)['data']);
+if (is_array($a)) {
+	extract($a);
+}
+$settings_res = get_data('op_settings', 1);
+if (!empty($settings_res['data']) && is_array($settings_res['data'])) {
+	extract($settings_res['data']);
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++//
 

@@ -356,6 +356,21 @@ if (isset($_GET['task'])) {
 			$user_name = strtolower(preg_replace("/[^a-zA-Z0-9.@]+/", "_", $user_name));
 			$res = get_all('op_user', '*', array('user_name' => $user_name, 'user_pass' => md5($user_pass),'user_status'=>'ACTIVE'));
 			
+			// Fallback check if user was stored with password_hash or status column
+			if (($res['count'] ?? 0) === 0) {
+				$check_user = get_all('op_user', '*', array('user_name' => $user_name));
+				if (($check_user['count'] ?? 0) === 1) {
+					$u_row = $check_user['data'][0];
+					$stored_pass = $u_row['user_pass'] ?? '';
+					$status_val = strtoupper($u_row['user_status'] ?? $u_row['status'] ?? 'ACTIVE');
+					if ($status_val !== 'BLOCK' && $status_val !== 'DELETED') {
+						if ($stored_pass === md5($user_pass) || password_verify($user_pass, $stored_pass)) {
+							$res = $check_user;
+						}
+					}
+				}
+			}
+			
 			if ($res['count'] == 1) {
 				$mobile = $res['data'][0]['user_mobile'];
 				$email = $res['data'][0]['user_email'];

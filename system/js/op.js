@@ -424,9 +424,10 @@ $("#login_btn").click(function () {
 		$(this).attr("disabled", true);
 		$(this).html("Please Wait...");
 		var data = $("#login_frm").serialize();
+		var login_url = (typeof base_url !== 'undefined' ? (base_url.endsWith('/') ? base_url : base_url + '/') + 'system/' : '') + 'system_process?task=verify_login';
 		$.ajax({
 			'type': 'POST',
-			'url': 'system_process?task=verify_login',
+			'url': login_url,
 			'data': data,
 			success: function (data) {
 				var obj = JSON.parse(data);

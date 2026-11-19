@@ -1,6 +1,7 @@
 <?php require_once('op_lib.php'); 
-$login_video_url = ($login_video_url=='')?'https://media.istockphoto.com/id/1497945391/video/young-beautiful-hispanic-woman-business-worker-using-calculator-working-at-office.mp4?s=mp4-640x640-is&k=20&c=1XxBuXvvsPBXRW1MSneEHSgu3x5_Ylh16dt1hpU2fpI=':$login_video_url;
-$logo = ($login_video_url=='')?$base_url.'system/img/logo.png':$base_url.'upload/'.$logo;
+$login_video_url = empty($login_video_url) ? 'https://media.istockphoto.com/id/1497945391/video/young-beautiful-hispanic-woman-business-worker-using-calculator-working-at-office.mp4?s=mp4-640x640-is&k=20&c=1XxBuXvvsPBXRW1MSneEHSgu3x5_Ylh16dt1hpU2fpI=' : $login_video_url;
+$logo = empty($logo) ? $base_url . 'system/img/logo.png' : $base_url . 'upload/' . $logo;
+$logo_width = $logo_width ?? '150';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +28,7 @@ $logo = ($login_video_url=='')?$base_url.'system/img/logo.png':$base_url.'upload
 	<!-- Remove this after purchasing -->
 	<link class="js-stylesheet" href="<?= $base_url ?>system/css/light.css" rel="stylesheet">
 	<link class="js-stylesheet" href="<?= $base_url ?>system/css/op.css" rel="stylesheet">
-	<script src="js/settings.js"></script>
+	<script src="<?= $base_url ?>system/js/settings.js"></script>
 	<style>
 	 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Exo:wght@600&display=swap');
 		body {

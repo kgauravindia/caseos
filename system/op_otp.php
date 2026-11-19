@@ -1,6 +1,4 @@
-<?php require_once('function.php'); 
-
-
+<?php require_once(dirname(__DIR__) . '/function.php'); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,12 +9,12 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="NIDHI COMPANY SOFTWARE">
+	<meta name="description" content="CaseOS : OTP Verification">
 	<meta name="author" content="OfferPlant">
 	<meta name="keywords" content="">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com/">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+	<link rel="shortcut icon" href="<?= $base_url ?>img/icons/icon-48x48.png" />
 
 	<!--<link rel="canonical" href="pages-sign-in.html" />-->
 
@@ -28,10 +26,9 @@
 	<!-- <link href="css/dark.css" rel="stylesheet"> -->
 
 	<!-- BEGIN SETTINGS -->
-	<!-- Remove this after purchasing -->
-	<link class="js-stylesheet" href="css/light.css" rel="stylesheet">
-	<link class="js-stylesheet" href="<?= $base_url ?>css/op.css" rel="stylesheet">
-	<script src="js/settings.js"></script>
+	<link class="js-stylesheet" href="<?= $base_url ?>system/css/light.css" rel="stylesheet">
+	<link class="js-stylesheet" href="<?= $base_url ?>system/css/op.css" rel="stylesheet">
+	<script src="<?= $base_url ?>system/js/settings.js"></script>
 	<style>
 		body {
 			font-family: 'Roboto', sans-serif;
@@ -96,12 +93,12 @@ if(isset($_GET['ref']) and $_GET['ref'] !="")
 			</div>
 		</div>
 	</main>
-<script src="<?= $base_url?>js/app.js"></script>
-<script src="<?= $base_url?>js/validate.js"></script>
-<script src="<?= $base_url?>js/notify.min.js"></script>
-<script src="<?= $base_url?>js/shortcut.js"></script>
-<script src="<?= $base_url?>js/bootbox.all.js"></script>
-<script src="<?= $base_url?>js/op.js"></script>
+<script src="<?= $base_url?>system/js/app.js"></script>
+<script src="<?= $base_url?>system/js/validate.js"></script>
+<script src="<?= $base_url?>system/js/notify.min.js"></script>
+<script src="<?= $base_url?>system/js/shortcut.js"></script>
+<script src="<?= $base_url?>system/js/bootbox.all.js"></script>
+<script src="<?= $base_url?>system/js/op.js"></script>
 
 <script>
     $(document).ready(function() {
