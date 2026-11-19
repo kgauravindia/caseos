@@ -65,7 +65,7 @@ if (isset($data['message'])) {
 }
 
 // Function to send a response message via the Telegram API
-function sendMessage($chatId='1171583771', $message)
+function sendMessage($chatId = '1171583771', $message = '')
 {
     global $botToken;
     // Replace with your Telegram Bot API token

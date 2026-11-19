@@ -30,10 +30,11 @@ $CONFIG['dev_contact'] ="9431426600";
 
 /* Environmental Configuration */
 // Determine protocol (http/https)
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$host = $_SERVER['HTTP_HOST'];
+$protocol = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'] ?? (php_sapi_name() === 'cli' ? 'localhost' : '');
 // Detect base directory dynamically
-$script_dir = str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+$script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+$script_dir = $script_name ? str_replace(basename($script_name), "", $script_name) : '/';
 $CONFIG['base_url'] = $protocol . $host . $script_dir;
 
 if ($host == 'localhost' || $host == '127.0.0.1') {
