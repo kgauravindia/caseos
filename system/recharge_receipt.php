@@ -89,8 +89,6 @@ $company_entity = "OfferPlant Technologies Private Limited";
 $company_address = !empty($inst_address) ? $inst_address : "2nd Floor, Godrej Building, Salempur, Chapra, Bihar - 841301, India";
 $company_email = !empty($inst_email) ? $inst_email : "support@caseos.olaw.in";
 $company_phone = !empty($inst_contact) ? $inst_contact : "+91 9431426600";
-$company_gstin = !empty($inst_gst) ? $inst_gst : "10AAFCO3646Q1ZG";
-$company_sac = "998313"; // Information Technology & Software Consulting
 
 // Transaction Metadata
 $amount = (float)($txn['amount'] ?? 0);
@@ -98,8 +96,7 @@ $currency = $txn['currency'] ?? 'INR';
 $txn_date = !empty($txn['transaction_date']) ? strtotime($txn['transaction_date']) : time();
 $formatted_date = date('d F, Y', $txn_date);
 $formatted_time = date('h:i A (T)', $txn_date);
-$invoice_number = "INV-" . date('Ym', $txn_date) . "-" . str_pad($txn['id'] ?? 1, 5, '0', STR_PAD_LEFT);
-$receipt_number = "RCP-" . strtoupper(substr(md5($txn['payment_id'] ?? $invoice_number), 0, 8));
+$receipt_number = "RCP-" . date('Ym', $txn_date) . "-" . str_pad($txn['id'] ?? 1, 5, '0', STR_PAD_LEFT);
 $payment_status = strtoupper($txn['status'] ?? 'SUCCESS');
 $is_paid = in_array($payment_status, ['SUCCESS', 'PAID', 'CAPTURED']);
 
@@ -192,7 +189,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Invoice #<?= htmlspecialchars($invoice_number) ?> - CaseOS</title>
+    <title>Payment Receipt #<?= htmlspecialchars($receipt_number) ?> - CaseOS (Non-GST)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -685,15 +682,14 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
                     <div class="brand-meta">
                         <strong><?= htmlspecialchars($company_entity) ?></strong><br>
                         <?= htmlspecialchars($company_address) ?><br>
-                        GSTIN: <strong><?= htmlspecialchars($company_gstin) ?></strong> &bull; SAC: <strong><?= htmlspecialchars($company_sac) ?></strong><br>
                         Support: <?= htmlspecialchars($company_email) ?> | Helpline: <?= htmlspecialchars($company_phone) ?>
                     </div>
                 </div>
 
                 <div class="invoice-badge-box">
-                    <span class="badge-type">ORIGINAL TAX INVOICE</span>
+                    <span class="badge-type">NON-GST BILL / PAYMENT RECEIPT</span>
                     <h2 class="invoice-title">RECEIPT</h2>
-                    <div class="invoice-number-tag"><?= htmlspecialchars($invoice_number) ?></div>
+                    <div class="invoice-number-tag"><?= htmlspecialchars($receipt_number) ?></div>
                 </div>
             </div>
 
@@ -702,7 +698,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
                 
                 <!-- Client Details -->
                 <div class="meta-col">
-                    <h3>Billed To (Client / Advocate)</h3>
+                    <h3>Customer / Advocate Details</h3>
                     <div class="client-name"><?= htmlspecialchars($user['full_name'] ?: ($user['user_name'] ?? 'Authorized User')) ?></div>
                     <div class="client-info-line">
                         <strong>User ID:</strong> <?= htmlspecialchars($user['user_name'] ?? ('USR-' . $user_id)) ?><br>
@@ -714,12 +710,12 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
 
                 <!-- Invoice Meta -->
                 <div class="meta-col">
-                    <h3>Transaction Summary</h3>
+                    <h3>Payment Summary</h3>
                     <div class="txn-meta-list">
-                        <span class="txn-meta-label">Invoice Date:</span>
+                        <span class="txn-meta-label">Receipt Date:</span>
                         <span class="txn-meta-val"><?= htmlspecialchars($formatted_date) ?></span>
 
-                        <span class="txn-meta-label">Issue Time:</span>
+                        <span class="txn-meta-label">Receipt Time:</span>
                         <span class="txn-meta-val"><?= htmlspecialchars($formatted_time) ?></span>
 
                         <span class="txn-meta-label">Payment ID:</span>
@@ -749,11 +745,10 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th>Description of Legal Software Services</th>
-                            <th style="width: 90px;">SAC</th>
-                            <th style="width: 60px; text-align: center;">Qty</th>
-                            <th style="width: 120px; text-align: right;">Rate (₹)</th>
-                            <th style="width: 130px; text-align: right;">Amount (₹)</th>
+                            <th>Description of Legal Software Services & Wallet Top-up</th>
+                            <th style="width: 70px; text-align: center;">Qty</th>
+                            <th style="width: 130px; text-align: right;">Rate (₹)</th>
+                            <th style="width: 140px; text-align: right;">Total Amount (₹)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -762,10 +757,9 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
                             <td>
                                 <div class="item-title">CaseOS Cloud Platform Wallet Credit</div>
                                 <div class="item-desc">
-                                    Prepaid credits top-up for automated case hearing alerts, cause lists synchronization, legal document storage, and e-Courts client communications.
+                                    Prepaid credits top-up for automated case hearing alerts, cause lists synchronization, legal document storage, and client communications.
                                 </div>
                             </td>
-                            <td style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--slate-600);"><?= htmlspecialchars($company_sac) ?></td>
                             <td style="text-align: center; font-weight: 600;">1</td>
                             <td style="text-align: right; font-family: 'JetBrains Mono', monospace;"><?= number_format($amount, 2) ?></td>
                             <td style="text-align: right; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary);">₹<?= number_format($amount, 2) ?></td>
@@ -782,7 +776,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
                         <img src="<?= htmlspecialchars($qr_code_url) ?>" alt="Verification QR Code">
                     </div>
                     <div class="words-content">
-                        <span>Invoice Amount in Words:</span>
+                        <span>Receipt Amount in Words:</span>
                         <strong><?= htmlspecialchars($amount_words) ?></strong>
                         <div style="font-size: 11px; color: var(--slate-400); margin-top: 6px;">
                             Scan QR code to verify this transaction digitally on the CaseOS portal.
@@ -792,16 +786,12 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
 
                 <div class="totals-box">
                     <div class="totals-row">
-                        <span>Taxable Amount</span>
+                        <span>Subtotal</span>
                         <span style="font-family: 'JetBrains Mono', monospace;">₹<?= number_format($amount, 2) ?></span>
                     </div>
                     <div class="totals-row">
-                        <span>CGST (0% - Included)</span>
-                        <span style="font-family: 'JetBrains Mono', monospace;">₹0.00</span>
-                    </div>
-                    <div class="totals-row">
-                        <span>SGST / IGST (0% - Included)</span>
-                        <span style="font-family: 'JetBrains Mono', monospace;">₹0.00</span>
+                        <span>Taxes / GST</span>
+                        <span style="font-family: 'JetBrains Mono', monospace; color: #64748b;">₹0.00 <small>(Non-GST Bill)</small></span>
                     </div>
                     <div class="totals-row grand-total">
                         <span>Total Paid</span>
@@ -830,7 +820,7 @@ $qr_code_url = "https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=
 
             <!-- Legal Disclaimer Footer -->
             <div class="invoice-footer">
-                This is a computer-generated official tax invoice under Section 65B(4) of the Indian Evidence Act and Information Technology Act, 2000. It requires no physical signature.<br>
+                This is an official computer-generated Non-GST Payment Receipt issued under the Information Technology Act, 2000. It requires no physical signature.<br>
                 For any inquiries or dispute resolutions, please write to <a href="mailto:<?= htmlspecialchars($company_email) ?>"><?= htmlspecialchars($company_email) ?></a> or visit <a href="<?= htmlspecialchars($base_url) ?>"><?= htmlspecialchars($base_url) ?></a>.
             </div>
 

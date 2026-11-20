@@ -332,8 +332,8 @@ if ($id) {
                             <li class="d-flex mb-0">
                                 <i class="align-middle text-success me-2 mt-1" data-feather="check-circle" style="width: 16px; height: 16px;"></i>
                                 <div>
-                                    <strong class="d-block text-dark">Instant GST Invoices</strong>
-                                    Download official recharge receipts and tax invoices immediately after every transaction.
+                                    <strong class="d-block text-dark">Instant Payment Receipts</strong>
+                                    Download official recharge receipts and payment bills immediately after every transaction.
                                 </div>
                             </li>
                         </ul>

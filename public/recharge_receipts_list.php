@@ -71,7 +71,7 @@ $current_wallet = get_data('op_user', $user_id, 'wallet')['data'] ?? 0;
                 <h1 class="h3 mb-1 text-dark fw-bold">
                     <i class="align-middle me-2 text-primary" data-feather="receipt"></i>Recharge Receipts & History
                 </h1>
-                <p class="text-muted small mb-0">Track all online wallet transactions and download tax receipts.</p>
+                <p class="text-muted small mb-0">Track all online wallet transactions and download official payment receipts.</p>
             </div>
             <div class="d-flex gap-2">
                 <a href="recharge" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm fw-semibold">
@@ -146,7 +146,7 @@ $current_wallet = get_data('op_user', $user_id, 'wallet')['data'] ?? 0;
                                         <th>Amount</th>
                                         <th>Method</th>
                                         <th>Status</th>
-                                        <th class="text-end pe-4">Tax Invoice</th>
+                                        <th class="text-end pe-4">Receipt / Bill</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -184,8 +184,8 @@ $current_wallet = get_data('op_user', $user_id, 'wallet')['data'] ?? 0;
                                                 </td>
                                                 <td class="text-end pe-4">
                                                     <a href="<?= $base_url ?>system/recharge_receipt?payment_id=<?= urlencode($txn['payment_id'] ?? '') ?>" 
-                                                       class="btn btn-receipt" target="_blank" title="View & Download Official Tax Invoice">
-                                                        <i class="align-middle me-1" data-feather="file-text" style="width: 12px; height: 12px;"></i> View Invoice
+                                                       class="btn btn-receipt" target="_blank" title="View & Download Payment Receipt">
+                                                        <i class="align-middle me-1" data-feather="file-text" style="width: 12px; height: 12px;"></i> View Receipt
                                                     </a>
                                                 </td>
                                             </tr>
