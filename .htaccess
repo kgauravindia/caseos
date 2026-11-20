@@ -4,6 +4,9 @@ RewriteEngine On
 # RewriteRule ^(.*)$ https://caseos.olaw.in/$1 [R,L]
 # RewriteRule ^(.*)$ http://localhost/caseos/$1 [R,L]
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ $1.php [NC,L] 
 
 </IfModule>
+
+ErrorDocument 404 404.php

@@ -1,14 +1,26 @@
 <?php
 ini_set('display_errors', 1);
 require_once(dirname(__DIR__) . '/op_config.php');
+require_once(__DIR__ . '/op_error_handler.php');
 // Define the root directory constant
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 global $db_name;
-$con = mysqli_connect($host_name, $db_user, $db_password, $db_name)
-	or die("Unable to Connect, Check the Connection Parameter. " . mysqli_error($con));
+mysqli_report(MYSQLI_REPORT_OFF);
+$con = @mysqli_connect($host_name, $db_user, $db_password, $db_name);
+if (!$con) {
+    $err_no = mysqli_connect_errno();
+    $err_msg = mysqli_connect_error();
+    $diag = "MySQL Connection Failed (Code $err_no): $err_msg\nHost: $host_name\nDatabase: $db_name\nUser: $db_user";
+    render_caseos_error(
+        "Database Connection Error",
+        "Could not establish a connection to the database server. Please ensure MySQL is active or check your configuration parameters in <code>op_config.php</code>.",
+        $diag,
+        500
+    );
+}
 
 // === OFFERPLANT MASTER FUNTION FOR EVERY WHERE ==== //
 
@@ -380,11 +392,11 @@ function verify($user_type)
 		global $client_role;
 		$all_page = $client_role;
 	} else {
-		die("Invalid User ! Don't Have Permission");
+		render_caseos_error("Access Denied", "Invalid account type or unauthorized access attempt.", null, 403);
 	}
 
 	if (!array_search($current_page, $all_page)) {
-		die("Don't have Permission");
+		render_caseos_error("Permission Required", "Your account does not have permission to access the requested module (<code>" . htmlspecialchars($current_page) . "</code>).", null, 403);
 	}
 }
 

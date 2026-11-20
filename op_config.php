@@ -2,6 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 } 
+if (file_exists(__DIR__ . '/system/op_error_handler.php')) {
+    require_once(__DIR__ . '/system/op_error_handler.php');
+} 
 $CONFIG['token'] = session_id();
 ini_set('max_execution_time', 300);
 set_time_limit(300);
