@@ -4,9 +4,12 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED & ~E_NOTICE);
 require_once(dirname(__DIR__) . '/op_config.php');
 require_once(__DIR__ . '/op_error_handler.php');
 // Define the root directory constant
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 global $db_name;
 mysqli_report(MYSQLI_REPORT_OFF);
@@ -614,44 +617,58 @@ function update_data($table_name, $ArrayData, $id, $pkey = 'id')
     global $user_id;
     global $current_date_time;
 
-    try {
-        // Add updated_at and updated_by to the data array
-        $ArrayData['updated_at'] = $current_date_time;
-        $ArrayData['updated_by'] = $user_id;
+    $result = ['id' => $id, 'status' => 'error', 'msg' => '', 'sql' => ''];
 
-        // Build the SET part of the SQL query
+    try {
+        // Query columns of the table to avoid SQL syntax errors on non-existent columns
+        $cols_res = function_exists('column_list') ? column_list($table_name) : [];
+        $actual_cols = !empty($cols_res['data']) ? array_column($cols_res['data'], 'COLUMN_NAME') : [];
+
+        // Add updated_at and updated_by to the data array only if column exists or column list is unavailable
+        if (empty($actual_cols) || in_array('updated_at', $actual_cols)) {
+            $ArrayData['updated_at'] = $current_date_time;
+        }
+        if (empty($actual_cols) || in_array('updated_by', $actual_cols)) {
+            $ArrayData['updated_by'] = $user_id;
+        }
+
+        // Build the SET part of the SQL query, filtering to actual existing columns if available
         $cols = array();
         foreach ($ArrayData as $key => $value) {
+            if (!empty($actual_cols) && !in_array($key, $actual_cols)) {
+                continue; // Skip columns that do not exist in this table schema
+            }
             $newvalue = post_clean($value);
-            $cols[] = "$key = '" . mysqli_real_escape_string($con, $newvalue) . "'";
+            $cols[] = "`$key` = '" . mysqli_real_escape_string($con, $newvalue) . "'";
         }
+
+        if (empty($cols)) {
+            $result['status'] = 'success';
+            $result['msg'] = "No columns to update";
+            return $result;
+        }
+
         $set_clause = implode(', ', $cols);
 
         // Prepare and execute the UPDATE query
-        $sql = "UPDATE $table_name SET $set_clause WHERE $pkey = '" . mysqli_real_escape_string($con, $id) . "'";
+        $sql = "UPDATE `$table_name` SET $set_clause WHERE `$pkey` = '" . mysqli_real_escape_string($con, $id) . "'";
         $res = mysqli_query($con, $sql);
 
         if (!$res) {
-            throw new Exception(mysqli_error($con));
+            $err = mysqli_error($con);
+            $result['status'] = 'error';
+            $result['msg'] = $err;
+            $result['sql'] = $sql;
+            return $result;
         }
 
         $num = mysqli_affected_rows($con);
-        if ($num > 0) {
-            // Record updated successfully
-            $result['id'] = $id;
-            $result['status'] = 'success';
-            $result['msg'] = $num . " Record Updated Successfully";
-        } else {
-            // No records were updated
-            $result['id'] = $id;
-            $result['status'] = 'error';
-            $result['msg'] = "No records updated";
-        }
-
+        $result['id'] = $id;
+        $result['status'] = 'success';
+        $result['msg'] = $num > 0 ? "$num Record Updated Successfully" : "No records updated";
         $result['sql'] = $sql;
         return $result;
-    } catch (Exception $e) {
-        // Handle the exception (e.g., log the error, return a specific error message)
+    } catch (\Throwable $e) {
         $result['id'] = $id;
         $result['status'] = 'error';
         $result['msg'] = "Error: " . $e->getMessage();
@@ -1091,36 +1108,43 @@ function multi_upload($fileArr='uploadimg',$target_dir = "../upload"){
 
 function send_mail($to, $subject, $msg, $att_arr='', $name='')
 {
-   require __DIR__ . '/vendor/autoload.php';
+   if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+       require_once __DIR__ . '/vendor/autoload.php';
+   }
    global $inst_name;
    global $inst_email;
    global $noreply_email;
    global $inst_email_password;
-   $mail = new PHPMailer(true);
-   $mail->isSMTP();
-   $mail->SMTPDebug = 0;// 2 for debug
-   $mail->Host = 'smtp.hostinger.com';
-   $mail->Port = 587;
-   $mail->SMTPAuth = true;
-   $mail->Username = $inst_email;
-   $mail->Password = $inst_email_password;
-   $mail->setFrom($inst_email, $inst_name);
-   $mail->addReplyTo($noreply_email, $inst_name);
-   $mail->addAddress($to, $name);
-   $mail->Subject = $subject;
-   $mail->isHTML(true);
-   $mail->Body = $msg;
+
+   try {
+       if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+           error_log("send_mail: PHPMailer class not available");
+           return false;
+       }
+       $mail = new PHPMailer(true);
+       $mail->isSMTP();
+       $mail->SMTPDebug = 0; // 2 for debug
+       $mail->Host = 'smtp.hostinger.com';
+       $mail->Port = 587;
+       $mail->SMTPAuth = true;
+       $mail->Username = $inst_email;
+       $mail->Password = $inst_email_password;
+       $mail->setFrom($inst_email, $inst_name);
+       $mail->addReplyTo($noreply_email, $inst_name);
+       $mail->addAddress($to, $name);
+       $mail->Subject = $subject;
+       $mail->isHTML(true);
+       $mail->Body = $msg;
        foreach((array)$att_arr as $att)
        {
             if(!empty($att)){
                 $mail->addAttachment($att);
             }
        }
-   if (!$mail->send()) {
-       echo 'Mailer Error: ' . $mail->ErrorInfo;
+       return (bool)$mail->send();
+   } catch (\Throwable $e) {
+       error_log('Mailer Error: ' . $e->getMessage());
        return false;
-   } else {
-       return true;
    }
 }
 

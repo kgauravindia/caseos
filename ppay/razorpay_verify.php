@@ -61,33 +61,45 @@ if ($success === true) {
         if (($payment_data['status'] ?? '') !== 'SUCCESS') {
             
             // 1. Update legacy online_payment status record
-            update_data('online_payment', [
-                'status'     => 'SUCCESS',
-                'amount'     => $amount,
-                'payment_id' => $razorpay_payment_id
-            ], $record_id);
+            try {
+                update_data('online_payment', [
+                    'status'     => 'SUCCESS',
+                    'amount'     => $amount,
+                    'payment_id' => $razorpay_payment_id
+                ], $record_id);
+            } catch (\Throwable $e) {
+                error_log("online_payment update notice: " . $e->getMessage());
+            }
 
             // 2. Update new payment_orders table
-            $order = get_data('payment_orders', $razorpay_order_id, null, 'order_id')['data'] ?? null;
-            if ($order && !empty($order['id'])) {
-                update_data('payment_orders', [
-                    'status'     => 'paid',
-                    'payment_id' => $razorpay_payment_id,
-                    'signature'  => $razorpay_signature
-                ], $order['id']);
+            try {
+                $order = get_data('payment_orders', $razorpay_order_id, null, 'order_id')['data'] ?? null;
+                if ($order && !empty($order['id'])) {
+                    update_data('payment_orders', [
+                        'status'     => 'paid',
+                        'payment_id' => $razorpay_payment_id,
+                        'signature'  => $razorpay_signature
+                    ], $order['id']);
+                }
+            } catch (\Throwable $e) {
+                error_log("payment_orders update notice: " . $e->getMessage());
             }
 
             // 3. Insert into payment_transactions table
-            insert_data('payment_transactions', [
-                'op_user_id' => $user_id,
-                'order_id'   => $razorpay_order_id,
-                'payment_id' => $razorpay_payment_id,
-                'amount'     => $amount,
-                'currency'   => RZP_CURRENCY,
-                'notes'      => json_encode($_POST),
-                'status'     => 'success',
-                'plan_type'  => 'CASEOS'
-            ]);
+            try {
+                insert_data('payment_transactions', [
+                    'op_user_id' => $user_id,
+                    'order_id'   => $razorpay_order_id,
+                    'payment_id' => $razorpay_payment_id,
+                    'amount'     => $amount,
+                    'currency'   => RZP_CURRENCY,
+                    'notes'      => json_encode($_POST),
+                    'status'     => 'success',
+                    'plan_type'  => 'CASEOS'
+                ]);
+            } catch (\Throwable $e) {
+                error_log("payment_transactions insert notice: " . $e->getMessage());
+            }
 
             // 4. Update Wallet balance and history
             wallet_amount($user_id, $amount, 'ADD', "Wallet Recharge via Razorpay ($razorpay_payment_id)");
