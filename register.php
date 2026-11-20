@@ -1,11 +1,7 @@
 <?php 
-//require_once('../op_config.php'); 
 require_once('function.php'); 
 $table_name = 'op_user';
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,11 +93,11 @@ $table_name = 'op_user';
 
         // Validate and Insert
         if (!empty($full_name) && !empty($user_name) && !empty($user_email) && !empty($_POST['user_pass'])) {
-            $stmt = $conn->prepare("INSERT INTO op_user (full_name, user_name, user_email, user_mobile, user_pass) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO op_user (full_name, user_name, user_email, user_mobile, user_pass, user_type, user_status, status) VALUES (?, ?, ?, ?, ?, 'ADMIN', 'ACTIVE', 'ACTIVE')");
             $stmt->bind_param("sssss", $full_name, $user_name, $user_email, $user_mobile, $user_pass);
 
             if ($stmt->execute()) {
-                echo "<p class='success-message'>Signup successful!</p>";
+                echo "<p class='success-message'>Signup successful! <a href='login.php'>Click here to login</a></p>";
             } else {
                 echo "<p class='error-message'>Error: " . $stmt->error . "</p>";
             }
