@@ -146,7 +146,7 @@ $current_wallet = get_data('op_user', $user_id, 'wallet')['data'] ?? 0;
                                         <th>Amount</th>
                                         <th>Method</th>
                                         <th>Status</th>
-                                        <th class="text-end pe-4">Receipt</th>
+                                        <th class="text-end pe-4">Tax Invoice</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -184,8 +184,8 @@ $current_wallet = get_data('op_user', $user_id, 'wallet')['data'] ?? 0;
                                                 </td>
                                                 <td class="text-end pe-4">
                                                     <a href="<?= $base_url ?>system/recharge_receipt?payment_id=<?= urlencode($txn['payment_id'] ?? '') ?>" 
-                                                       class="btn btn-receipt" target="_blank" title="View & Download PDF Receipt">
-                                                        <i class="align-middle me-1" data-feather="download" style="width: 12px; height: 12px;"></i> Receipt
+                                                       class="btn btn-receipt" target="_blank" title="View & Download Official Tax Invoice">
+                                                        <i class="align-middle me-1" data-feather="file-text" style="width: 12px; height: 12px;"></i> View Invoice
                                                     </a>
                                                 </td>
                                             </tr>

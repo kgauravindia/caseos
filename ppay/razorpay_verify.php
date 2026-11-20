@@ -211,7 +211,7 @@ if ($success === true) {
             <!-- Actions -->
             <div class="d-grid gap-2 mb-3">
                 <a href="<?= $base_url ?>system/recharge_receipt?payment_id=<?= urlencode($razorpay_payment_id) ?>" target="_blank" class="btn btn-primary btn-premium shadow-sm">
-                    <i data-feather="file-text" class="me-1" style="width: 16px; height: 16px;"></i> View & Download Receipt
+                    <i data-feather="file-text" class="me-1" style="width: 16px; height: 16px;"></i> View & Download Tax Invoice
                 </a>
                 <div class="row g-2">
                     <div class="col-6">
