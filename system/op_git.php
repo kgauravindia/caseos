@@ -45,7 +45,9 @@ function execute_git($cmd_args, $dir) {
         return false;
     }
 
-    $git_cmd = 'git -C ' . escapeshellarg($dir) . ' ' . $cmd_args . ' 2>&1';
+    // Suppress SSH host key verification prompts and failures on Linux/Hostinger servers
+    $ssh_opts = '-c core.sshCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"';
+    $git_cmd = 'git -C ' . escapeshellarg($dir) . ' ' . $ssh_opts . ' ' . $cmd_args . ' 2>&1';
 
     // 1. Try shell_exec
     if (is_exec_available('shell_exec')) {
@@ -191,6 +193,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['git_action'])) {
             $action_result = execute_git("stash pop", $repo_dir);
             $action_status = (strpos($action_result, 'CONFLICT') !== false || strpos($action_result, 'error:') !== false) ? 'danger' : 'success';
         }
+        elseif ($action === 'set_remote') {
+            $new_remote = trim($_POST['remote_url'] ?? '');
+            if (!empty($new_remote)) {
+                $executed_cmd = "git remote set-url origin " . $new_remote;
+                $res = execute_git("remote set-url origin " . escapeshellarg($new_remote), $repo_dir);
+                $action_result = ($res === '' || $res === false) ? "Remote URL successfully updated to: " . $new_remote : $res;
+                $action_status = 'success';
+            }
+        }
     }
 }
 
@@ -299,6 +310,28 @@ if ($cli_enabled) {
             </div>
         <?php endif; ?>
 
+        <!-- SSH Remote Advisory Notice if SSH is detected -->
+        <?php 
+        $is_ssh_remote = !empty($remote_url) && (strpos($remote_url, 'git@') === 0 || strpos($remote_url, 'ssh://') === 0);
+        ?>
+        <?php if ($is_ssh_remote): ?>
+            <div class="alert alert-info border-0 shadow-sm mb-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div>
+                        <h5 class="alert-heading fw-bold mb-1 text-dark"><i class="align-middle me-2 text-primary" data-feather="key"></i>SSH Remote Detected</h5>
+                        <p class="mb-0 small text-muted">Your server repository is configured with an SSH remote (<code><?= htmlspecialchars($remote_url) ?></code>). Since this repository is public, switching to <strong>HTTPS</strong> resolves <em>"Host key verification failed"</em> and allows 1-click pulls without requiring server SSH keys.</p>
+                    </div>
+                    <form method="post" class="m-0">
+                        <input type="hidden" name="git_action" value="set_remote">
+                        <input type="hidden" name="remote_url" value="https://github.com/kgauravindia/caseos.git">
+                        <button type="submit" class="btn btn-primary btn-sm shadow-sm fw-bold">
+                            <i class="align-middle me-1" data-feather="repeat"></i> Switch to HTTPS (Fix Host Key)
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <!-- Command Execution Output (if action performed) -->
         <?php if ($action_result !== null): ?>
             <div class="card border-0 shadow-sm mb-4">
@@ -309,9 +342,23 @@ if ($cli_enabled) {
                     </span>
                     <span class="badge bg-<?= $action_status ?> text-uppercase"><?= $action_status ?></span>
                 </div>
-                <div class="card-body bg-dark text-light p-3 rounded-bottom font-monospace" style="font-size: 0.85rem; max-height: 280px; overflow-y: auto;">
+                <div class="card-body bg-dark text-light p-3 <?= ($action_status === 'danger' && (strpos($action_result, 'Host key verification failed') !== false || strpos($action_result, 'Could not read from remote repository') !== false)) ? '' : 'rounded-bottom' ?> font-monospace" style="font-size: 0.85rem; max-height: 280px; overflow-y: auto;">
                     <pre class="mb-0 text-light" style="white-space: pre-wrap; word-break: break-all;"><?= htmlspecialchars($action_result) ?></pre>
                 </div>
+                <?php if ($action_status === 'danger' && (strpos($action_result, 'Host key verification failed') !== false || strpos($action_result, 'Could not read from remote repository') !== false)): ?>
+                    <div class="card-footer bg-danger bg-opacity-10 py-2 px-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <span class="small text-danger fw-semibold">
+                            <i class="align-middle me-1" data-feather="alert-circle"></i> Host key verification failed. Switch the remote URL to HTTPS to pull without SSH authentication.
+                        </span>
+                        <form method="post" class="m-0">
+                            <input type="hidden" name="git_action" value="set_remote">
+                            <input type="hidden" name="remote_url" value="https://github.com/kgauravindia/caseos.git">
+                            <button type="submit" class="btn btn-sm btn-danger fw-bold shadow-sm">
+                                <i class="align-middle me-1" data-feather="repeat"></i> Fix Now: Switch to HTTPS
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 
@@ -563,6 +610,18 @@ if ($cli_enabled) {
                                         <?php else: ?>
                                             <span class="text-muted">Not detected</span>
                                         <?php endif; ?>
+                                        <div class="mt-1">
+                                            <a class="small text-primary text-decoration-none" data-bs-toggle="collapse" href="#changeRemoteCollapse" role="button">
+                                                <i class="align-middle me-1" data-feather="edit-2" style="width: 12px; height: 12px;"></i>Edit Remote URL
+                                            </a>
+                                            <div class="collapse mt-2" id="changeRemoteCollapse">
+                                                <form method="post" class="d-flex gap-2">
+                                                    <input type="hidden" name="git_action" value="set_remote">
+                                                    <input type="text" name="remote_url" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($remote_url ?: 'https://github.com/kgauravindia/caseos.git') ?>" required>
+                                                    <button type="submit" class="btn btn-dark btn-sm text-nowrap" <?= !$cli_enabled ? 'disabled' : '' ?>>Save</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
