@@ -121,7 +121,9 @@ class Requests_Transport_cURL implements Requests_Transport {
 		}
 
 		$this->process_response($response, $options);
-		curl_close($this->fp);
+		if (PHP_VERSION_ID < 80000) {
+			@curl_close($this->fp);
+		}
 		return $this->headers;
 	}
 
@@ -176,7 +178,9 @@ class Requests_Transport_cURL implements Requests_Transport {
 				$options['hooks']->dispatch('transport.internal.parse_response', array(&$responses[$key], $requests[$key]));
 
 				curl_multi_remove_handle($multihandle, $done['handle']);
-				curl_close($done['handle']);
+				if (PHP_VERSION_ID < 80000) {
+					@curl_close($done['handle']);
+				}
 
 				if (!is_string($responses[$key])) {
 					$options['hooks']->dispatch('multiple.request.complete', array(&$responses[$key], $key));

@@ -55,7 +55,7 @@ function sendRequest($url, $data)
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
     $result = curl_exec($curl);
-    curl_close($curl);
+    @curl_close($curl);
 
     if ($result === false) {
         echo 'Error sending message or file.';

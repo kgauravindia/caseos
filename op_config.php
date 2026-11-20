@@ -11,7 +11,7 @@ set_time_limit(300);
 date_default_timezone_set('Asia/Kolkata');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED & ~E_NOTICE);
 $CONFIG['today'] =date('Y-m-d');
 $CONFIG['current_date_time'] =date('Y-m-d H:i:s');
 $api_key ='a9dcc62d6078b881d318aca0ead65ab5'; //MyAdvIndia@2020

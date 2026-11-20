@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED & ~E_NOTICE);
 
 require_once(__DIR__ . '/system/op_lib.php');
 
@@ -470,7 +470,7 @@ function sendsms1($number,$sms)
 		$res= curl_exec($ch);
 		$new_credit =$sms_limit - $credit;
 		mysqli_query($con,"update op_user set sms_limit =$new_credit where id =$user_id");
-		curl_close($ch);
+		@curl_close($ch);
 		return $res;
 		}
 		

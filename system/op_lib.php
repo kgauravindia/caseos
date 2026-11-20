@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 1);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED & ~E_NOTICE);
 require_once(dirname(__DIR__) . '/op_config.php');
 require_once(__DIR__ . '/op_error_handler.php');
 // Define the root directory constant
@@ -1136,7 +1137,7 @@ function api_call($api_url)
 	// Execute
 	$result = curl_exec($ch);
 	// Closing
-	curl_close($ch);
+	@curl_close($ch);
 	return $result;
 }
 
@@ -1245,7 +1246,7 @@ function get_bal_msg()
 	// Execute
 	$result = curl_exec($ch);
 	// Closing
-	curl_close($ch);
+	@curl_close($ch);
 	$data  = json_decode($result, true);
 	return $data[0]['routeBalance'];
 }
@@ -1266,7 +1267,7 @@ function get_bal_sms()
 	// Execute
 	$result = curl_exec($ch);
 	// Closing
-	curl_close($ch);
+	@curl_close($ch);
 	$data  = json_decode($result, true);
 	return $data;
 }
@@ -1294,7 +1295,7 @@ function send_msg($number,$sms,$templateid)
 	        curl_setopt($ch,CURLOPT_URL, $url);
 	    	$res= curl_exec($ch);
 	    	$data =json_decode($res, true);
-	    	curl_close($ch);
+	    	@curl_close($ch);
 			}
 			return $res;
 		}	
@@ -1532,7 +1533,7 @@ function remote_file_size($url)
 	//curl_setopt( $curl, CURLOPT_USERAGENT, get_user_agent_string() );
 
 	$data = curl_exec($curl);
-	curl_close($curl);
+	@curl_close($curl);
 
 	if ($data) {
 		$content_length = "unknown";
@@ -2140,7 +2141,7 @@ function remote_file_exists($url)
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); # handles 301/2 redirects
 	curl_exec($ch);
 	$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	curl_close($ch);
+	@curl_close($ch);
 	if ($httpCode == 200) {
 		return false;
 	}else{
@@ -3482,7 +3483,7 @@ function push_msg($message, $title='', $link='') {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $response = curl_exec($ch);
-    curl_close($ch);
+    @curl_close($ch);
     return $response;
 }
 
