@@ -3,20 +3,20 @@ require_once('../function.php');
 // session_start() removed as it is already started in op_config.php
 
 if (!isset($_SESSION['initiated'])) {
-    die("Access Denied");
+    render_caseos_error("Access Denied", "You must be logged in to access payment receipts.", null, 403);
 }
 
-$payment_id = isset($_GET['payment_id']) ? mysqli_real_escape_string($con, $_GET['payment_id']) : '';
+$payment_id = isset($_GET['payment_id']) ? mysqli_real_escape_string($con, trim($_GET['payment_id'])) : '';
 
 if (empty($payment_id)) {
-    die("Invalid Payment ID");
+    render_caseos_error("Invalid Request", "No payment ID was specified in the request.", null, 400);
 }
 
 // Fetch Transaction Details
 $transaction = get_all('payment_transactions', '*', ['payment_id' => $payment_id]);
 
-if ($transaction['count'] == 0) {
-    die("Transaction Not Found");
+if (($transaction['count'] ?? 0) == 0) {
+    render_caseos_error("Receipt Not Found", "No payment record was found for reference <code>" . htmlspecialchars($payment_id) . "</code>.", null, 404);
 }
 
 $txn = $transaction['data'][0];
