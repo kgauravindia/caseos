@@ -89,7 +89,7 @@
 								<li class="sidebar-item"><a class="sidebar-link" href="<?= $base_url?>system/op_user_manage">User Directory</a></li>
 								<li class="sidebar-item"><a class="sidebar-link text-warning fw-bold" href="<?= $base_url?>system/op_recycle_bin">Recycle Bin</a></li>
 								<li class="sidebar-item"><a class="sidebar-link" href="<?= $base_url?>system/op_backup">System Backup</a></li>
-								<li class="sidebar-item"><a class="sidebar-link text-info fw-bold" href="<?= $base_url?>system/op_git"><i class="align-middle me-1" data-feather="git-pull-request"></i> Git Sync (Pull/Push)</a></li>
+								<li class="sidebar-item"><a class="sidebar-link text-info fw-bold" href="<?= $base_url?>system/op_git"><i class="align-middle me-1" data-feather="git-branch"></i> Version Control (Git) <span class="badge bg-primary rounded-pill float-end" style="font-size: 0.6rem;">VCS</span></a></li>
 								<li class="sidebar-item"><a class="sidebar-link" href="<?= $base_url?>system/op_icons">Icon Library</a></li>
 								<li class="sidebar-item"><a class="sidebar-link" href="<?= $base_url?>system/op_settings_manage">System Settings</a></li>
 								<li class="sidebar-item"><a class="sidebar-link" href="<?= $base_url?>system/op_docs_manager">Asset Manager</a></li>
